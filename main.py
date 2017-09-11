@@ -33,12 +33,12 @@ def basic_statistic2(path):
         match = re.search(r'\.[a-z]*$', i)
     if match:
         if len(array) == 0:
-            dictin{match.group()} = "1"
+            dictin{match.group(0)} = "1"
         for j in range(len(array)):
             if j == match.group():
                 dictin[j] += 1
             else:
-                dictin{match.group()} = 1
+                dictin{match.group(0)} = 1
 
     else:
         return basic_statistic2(path + i)
