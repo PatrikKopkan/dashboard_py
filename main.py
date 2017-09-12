@@ -24,34 +24,39 @@ def basic_statistic(path):
     return ""
 
 
-def basic_statistic2(path):
+def basic_statistic2(path, keys=[], counts=[]):
 
-    dictin = {}
+    keys = keys
+    counts = counts
     mydir = os.listdir(path)
-
     for i in mydir:
-        match = re.search(r'\.[a-z]*$', i)
-    if match:
-        if len(array) == 0:
-            dictin{match.group(0)} = "1"
-        for j in range(len(array)):
-            if j == match.group():
-                dictin[j] += 1
-            else:
-                dictin{match.group(0)} = 1
+        temp = True
+        match = re.findall(r'\.[a-z]+', i)
+        if match:
 
-    else:
-        return basic_statistic2(path + i)
+            for j in range(len(keys)):
+                if keys[j] == match[0]:
+                    counts[j] += 1
+                    temp = False
+                    break
+            if temp:
+                keys.append(match[0])
+                counts.append(1)
+        else:
+            return basic_statistic2(path + "/" + i, keys, counts)
+    return keys, counts
 
 #os.system("ls -l")
 path2 = "/home/dellboy/Documents/dashboard/links.txt"
 #git_clone(path2)
-mypath = "/home/$USER/Documents"
+mypath = "/home/$USER/Documents/test"
 os.system("echo $USER > temp.txt")
 file = open("temp.txt", "r")
 user = file.readline()
 user = user.replace("\n", "")
 os.system("rm temp.txt")
 
-#basic_statistic2(mypath.replace("$USER", user))
-array = []
+print(basic_statistic2(mypath.replace("$USER", user)))
+string = "afa.cf afa.txt .png"
+#print(re.findall(r'\.[a-z]+', string))
+#print(match)
