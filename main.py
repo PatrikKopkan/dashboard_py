@@ -1,5 +1,6 @@
 import os
 import re
+import FileEntry
 
 def git_clone(path):
     """
@@ -11,21 +12,27 @@ def git_clone(path):
     file = open(path,"r")
     for line in file:
         commands += "; git -c http.sslVerify=false clone " + line.replace("\n", "")
-
-    #print(commands)
     os.system(commands)
+
+
+def get_user():
+    os.system("echo $USER > temp.txt")
+    file = open("temp.txt", "r")
+    os.system("rm temp.txt")
+    user = file.readline()
+    user = user.replace("\n", "")
+    return user
 
 
 def basic_statistic(path):
-    commands = "cd " + path
+    commands = "cd " + path + "; ls -R -l > mytemp.txt"
     os.system(commands)
-    os.system("ls")
+    file = open(path + "/mytemp.txt", "r")
+    os.system("cd " + path + "; rm mytemp.txt")
+    return file.readlines()
 
-    return ""
 
-
-def basic_statistic2(path, keys=[], counts=[]):
-
+def basic_statistic2(path, keys=[], counts=[],):
     keys = keys
     counts = counts
     mydir = os.listdir(path)
@@ -44,19 +51,21 @@ def basic_statistic2(path, keys=[], counts=[]):
                 counts.append(1)
         else:
             return basic_statistic2(path + "/" + i, keys, counts)
+
+        return basic_statistic2(keys, counts)
     return keys, counts
 
-#os.system("ls -l")
+
 path2 = "/home/dellboy/Documents/dashboard/links.txt"
 #git_clone(path2)
-mypath = "/home/$USER/Documents/test"
-os.system("echo $USER > temp.txt")
-file = open("temp.txt", "r")
-user = file.readline()
-user = user.replace("\n", "")
-os.system("rm temp.txt")
+mypath = "/home/$USER/Documents/repoes"
 
-print(basic_statistic2(mypath.replace("$USER", user)))
-string = "afa.cf afa.txt .png"
-#print(re.findall(r'\.[a-z]+', string))
-#print(match)
+var = basic_statistic(mypath.replace("$USER", get_user()))
+files = FileEntry.FileEntry()
+files.parse_from_ls(var)
+files.count()
+print(files)
+print(files.xml)
+
+
+
