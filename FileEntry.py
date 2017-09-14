@@ -2,16 +2,17 @@ import re
 
 
 class File:
-    def __init__(self, name, length):
+    def __init__(self, repo, name, length):
+        self.repo = repo
         self.name = name
         self.length = length
 
     def __str__(self):
+        #return "Repository: " + self.repo + " " + "Name: " + self.name + " Length: " + str(self.length)
         return "Name: " + self.name + " Length: " + str(self.length)
-
-
-class FileEntry:
-    def __init__(self):
+class Repo:
+    def __init__(self, name):
+        self.name = name
         self.Files = []
         self.adoc = 0
         self.xml = 0
@@ -21,21 +22,26 @@ class FileEntry:
         self.Files.append(file)
 
     def parse_from_ls(self, array):
-        temp = []
-        for s in array:
-            temp = s.split()
-            if len(temp) == 9:
-                self.append(File(temp[8], temp[4]))
+        #temp = []
+        #repo = ""
+        #for s in array:
+        #    match = re.findall(r'\.\/([a-zA-Z_\-0-9]+)', s)
+        #    if match:
+        #        repo = match[0]
+        #    temp = s.split()
+        #    if len(temp) == 9:
+        #        self.append(File(repo, temp[8], temp[4]))
+        pass
 
     def __str__(self):
-        output = ""
+        output = "Repository: " + self.name + "\n"
         for f in self.Files:
             output += f.__str__() + "\n"
         return output
 
     def count(self):
         for f in self.Files:
-            match = re.findall(r'\.[a-z]+', f.name)
+            match = re.findall(r'\.[a-z]+$', f.name)
             if match:
                 if match[0] == ".adoc":
                     self.adoc += 1
@@ -54,3 +60,46 @@ class FileEntry:
 
                 if match[0] == "jpeg":
                     self.pictures += 1
+
+
+class FileEntry:
+    def __init__(self):
+        self.Files = []
+        self.adoc = 0
+        self.xml = 0
+        self.pictures = 0
+
+    def append(self, file):
+        self.Files.append(file)
+
+    def parse_from_ls(self, array):
+        temp = []
+        repo = ""
+        i = 0
+        for s in array:
+            match = re.findall(r'\.\/([a-zA-Z_\-0-9]+)', s)
+            if match:
+                if repo == "":
+                    repo = match[0]
+                    self.append(Repo(repo))
+                elif repo != match[0]:
+                    repo = match[0]
+                    self.append(Repo(repo))
+                    i += 1
+            temp = s.split()
+            if (len(temp) == 9 & len(self.Files) != 0):
+                self.Files[i].append(File(repo, temp[8], temp[4]))
+
+    def __str__(self):
+        output = ""
+        for f in self.Files:
+            output += f.__str__() + "\n"
+        return output
+
+    def count(self):
+        for f in self.Files:
+            f.count()
+            self.adoc += f.adoc
+            self.xml += f.xml
+            self.pictures += f.pictures
+

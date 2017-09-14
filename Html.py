@@ -20,12 +20,19 @@ class Html:
         else:
             self.scripts_of_header += "<script>\n" + code + "</script>\n"
 
-    def add_scripts(self, codes, body = True):
+    def add_scripts(self, codes, body=True):
         for code in codes:
             self.add_script(code, body)
 
-    def add_scriptlink(self, url, body = True):
-        pass
+    def add_scriptlink(self, url, body=True):
+        if body:
+            self.scripts_of_body += "<script src=" + url + "></script>"
+        else:
+            self.scripts_of_header += "<script src=\"" + url + "\"></script>"
+
+    def add_scriptlinks(self, urls, body=True):
+        for url in urls:
+            self.add_scriptlink(url, body)
 
     def get_document(self):
         return "<!Doctype>\n<html>\n<header\n" + self.header + "\n" + self.scripts_of_header + "\n</header>\n<body>\n" \
@@ -35,3 +42,21 @@ class Html:
         file = open(path, "w")
         file.write(self.get_document())
         file.close()
+
+    def sorted_table(self, file_entries):
+        self.add_scriptlink("http://jenkinscat.gsslab.pnq.redhat.com/sorttable.js")
+        self.body += "<table class='table table-condensed table-hover table-bordered sortable'>\n"
+        self.body += "<th>\n"
+        self.body += "<td>" + "repository" + "</td>\n"
+        self.body += "<td>" + "adoc" + "</td>\n"
+        self.body += "<td>" + "xml" + "</td>\n"
+        self.body += "<td>" + "pictures" + "</td>\n"
+        self.body += "</th>\n"
+        for r in file_entries.Files:
+            self.body += "<tr>\n"
+            self.body += "<td>" + r.name + "</td>\n"
+            self.body += "<td>" + r.adoc + "</td>\n"
+            self.body += "<td>" + r.xml + "</td>\n"
+            self.body += "<td>" + r.pictures + "</td>\n"
+            self.body += "</tr>\n"
+        self.body += "</table>\n"

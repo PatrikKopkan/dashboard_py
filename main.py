@@ -1,6 +1,7 @@
 import os
 import re
 import FileEntry
+import subprocess
 
 def git_clone(path):
     """
@@ -27,7 +28,7 @@ def get_user():
 
 
 def basic_statistic(path):
-    commands = "cd " + path + "; ls -R -l > mytemp.txt"
+    commands = "cd " + path + "; ls -R -l> mytemp.txt"
     os.system(commands)
     file = open(path + "/mytemp.txt", "r")
     output = file.readlines()
@@ -36,28 +37,20 @@ def basic_statistic(path):
     return output
 
 
-def basic_statistic2(path, keys=[], counts=[],):
-    keys = keys
-    counts = counts
-    mydir = os.listdir(path)
-    for i in mydir:
-        temp = True
-        match = re.findall(r'\.[a-z]+', i)
-        if match:
-
-            for j in range(len(keys)):
-                if keys[j] == match[0]:
-                    counts[j] += 1
-                    temp = False
-                    break
-            if temp:
-                keys.append(match[0])
-                counts.append(1)
-        else:
-            return basic_statistic2(path + "/" + i, keys, counts)
-
-        return basic_statistic2(keys, counts)
-    return keys, counts
+def basic_statistic2(path):
+    #commands = "cd " + path + "; ls -R -l > mytemp.txt"
+    #p = subprocess.Popen(commands, stdout=subprocess.PIPE, shell=True)
+    #for line in p.stdout:
+    #    print(line)
+    commands = "cd " + path + "; ls -R -l> mytemp.txt"
+    os.system(commands)
+    file = open(path + "/mytemp.txt", "r")
+    output = ""
+    for line in file:
+        output += line
+    file.close()
+    os.system("cd " + path + "; rm mytemp.txt")
+    print(output)
 
 
 path2 = "/home/dellboy/Documents/dashboard/links.txt"
@@ -65,11 +58,12 @@ path2 = "/home/dellboy/Documents/dashboard/links.txt"
 mypath = "/home/$USER/Documents/repoes"
 
 var = basic_statistic(mypath.replace("$USER", get_user()))
+#output = ""
+#for item in var:
+#    output += item + "\n"
+#print(output)
 files = FileEntry.FileEntry()
 files.parse_from_ls(var)
 files.count()
 print(files)
-print(files.xml)
-
-
-
+#print(files.xml)
