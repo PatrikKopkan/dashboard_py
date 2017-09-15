@@ -1,6 +1,6 @@
 class Html:
 
-    def __init__(self, header, body):
+    def __init__(self, header="", body=""):
         self.header = header
         self.body = body
         self.scripts_of_body = ""
@@ -35,10 +35,10 @@ class Html:
             self.add_scriptlink(url, body)
 
     def get_document(self):
-        return "<!Doctype>\n<html>\n<header\n" + self.header + "\n" + self.scripts_of_header + "\n</header>\n<body>\n" \
+        return "<!Doctype>\n<html>\n<header>\n" + self.header + "\n" + self.scripts_of_header + "\n</header>\n<body>\n" \
                + self.body + "\n" + self.scripts_of_body + "\n</body>\n</html>"
 
-    def get_html_file(self, path):
+    def get_html_file(self, path="index.html"):
         file = open(path, "w")
         file.write(self.get_document())
         file.close()
@@ -47,16 +47,16 @@ class Html:
         self.add_scriptlink("http://jenkinscat.gsslab.pnq.redhat.com/sorttable.js")
         self.body += "<table class='table table-condensed table-hover table-bordered sortable'>\n"
         self.body += "<th>\n"
-        self.body += "<td>" + "repository" + "</td>\n"
+        #self.body += "<td>" + "repository" + "</td>\n"
         self.body += "<td>" + "adoc" + "</td>\n"
         self.body += "<td>" + "xml" + "</td>\n"
         self.body += "<td>" + "pictures" + "</td>\n"
         self.body += "</th>\n"
         for r in file_entries.Files:
             self.body += "<tr>\n"
-            self.body += "<td>" + r.name + "</td>\n"
-            self.body += "<td>" + r.adoc + "</td>\n"
-            self.body += "<td>" + r.xml + "</td>\n"
-            self.body += "<td>" + r.pictures + "</td>\n"
+            self.body += "<td>" + str(r.name) + "</td>\n"
+            self.body += "<td>" + str(r.adoc) + "</td>\n"
+            self.body += "<td>" + str(r.xml) + "</td>\n"
+            self.body += "<td>" + str(r.pictures) + "</td>\n"
             self.body += "</tr>\n"
         self.body += "</table>\n"

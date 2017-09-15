@@ -10,6 +10,8 @@ class File:
     def __str__(self):
         #return "Repository: " + self.repo + " " + "Name: " + self.name + " Length: " + str(self.length)
         return "Name: " + self.name + " Length: " + str(self.length)
+
+
 class Repo:
     def __init__(self, name):
         self.name = name
@@ -69,8 +71,8 @@ class FileEntry:
         self.xml = 0
         self.pictures = 0
 
-    def append(self, file):
-        self.Files.append(file)
+    def append(self, repo):
+        self.Files.append(repo)
 
     def parse_from_ls(self, array):
         temp = []
@@ -87,7 +89,13 @@ class FileEntry:
                     self.append(Repo(repo))
                     i += 1
             temp = s.split()
-            if (len(temp) == 9 & len(self.Files) != 0):
+            #print(temp)
+            #print(len(temp) == 9, 9 & len(self.Files) != 0)
+            #print(len(temp) == 9 & len(self.Files) != 0)
+            #print(False & True)
+            if len(temp) == 9 and len(self.Files) != 0:
+                #print(self.Files[i])
+                #print(temp[8])
                 self.Files[i].append(File(repo, temp[8], temp[4]))
 
     def __str__(self):

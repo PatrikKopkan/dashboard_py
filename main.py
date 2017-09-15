@@ -2,6 +2,7 @@ import os
 import re
 import FileEntry
 import subprocess
+import Html
 
 def git_clone(path):
     """
@@ -65,5 +66,8 @@ var = basic_statistic(mypath.replace("$USER", get_user()))
 files = FileEntry.FileEntry()
 files.parse_from_ls(var)
 files.count()
-print(files)
+doc = Html.Html()
+doc.sorted_table(files)
+print(doc.get_document())
+doc.get_html_file("/home/dellboy/Documents/index.html")
 #print(files.xml)
