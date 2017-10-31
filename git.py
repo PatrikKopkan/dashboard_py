@@ -31,7 +31,7 @@ class Gitlog:
                 commit = commitm[0]
             if authorm:
                 author = authorm[0]
-            if email
+            if email:
                 email = email[0]
             if datem:
                 self.git_entries.append(GitEntry(commit, author, email, datem[0]))
