@@ -4,6 +4,11 @@ import FileEntry
 import subprocess
 import Html
 
+
+JS_LINK = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"
+CSS_LINK = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"
+
+
 def git_clone(path):
     """
 
@@ -11,7 +16,7 @@ def git_clone(path):
     """
     commands = "cd /home/$USER/Documents; mkdir -p repoes; cd repoes"
 
-    file = open(path,"r")
+    file = open(path, "r")
     for line in file:
         commands += "; git -c http.sslVerify=false clone " + line.replace("\n", "")
     os.system(commands)
@@ -39,10 +44,10 @@ def basic_statistic(path):
 
 
 def basic_statistic2(path):
-    #commands = "cd " + path + "; ls -R -l > mytemp.txt"
-    #p = subprocess.Popen(commands, stdout=subprocess.PIPE, shell=True)
-    #for line in p.stdout:
-    #    print(line)
+    # commands = "cd " + path + "; ls -R -l > mytemp.txt"
+    # p = subprocess.Popen(commands, stdout=subprocess.PIPE, shell=True)
+    # for line in p.stdout:
+    #     print(line)
     commands = "cd " + path + "; ls -R -l> mytemp.txt"
     os.system(commands)
     file = open(path + "/mytemp.txt", "r")
@@ -55,21 +60,21 @@ def basic_statistic2(path):
 
 
 path2 = "/home/dellboy/Documents/dashboard/links.txt"
-#git_clone(path2)
+# git_clone(path2)
 mypath = "/home/$USER/Documents/repoes"
 
 var = basic_statistic(mypath.replace("$USER", get_user()))
-#output = ""
-#for item in var:
-#    output += item + "\n"
-#print(output)
+# output = ""
+# for item in var:
+#     output += item + "\n"
+# print(output)
 files = FileEntry.FileEntry()
 files.parse_from_ls(var)
 files.count()
 doc = Html.Html()
-doc.add_csslink("https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css")
-doc.add_scriptlink("https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js")
+doc.add_csslink(CSS_LINK)
+doc.add_scriptlink(JS_LINK)
 doc.sorted_table(files)
 print(doc.get_document())
 doc.get_html_file("/home/dellboy/Documents/index.html")
-#print(files.xml)
+# print(files.xml)
