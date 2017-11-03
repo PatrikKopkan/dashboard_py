@@ -6,7 +6,6 @@ class Html:
         self.scripts_of_body = ""
         self.scripts_of_head = ""
 
-
     def add_csslink(self, url):
         self.head += "\n<link rel=\"stylesheet\" type=text/css href=\"" + url + "\""
 
@@ -14,7 +13,7 @@ class Html:
         for url in urls:
             self.add_csslink(url)
 
-    def add_script(self, code, body = True):
+    def add_script(self, code, body=True):
         if body:
             self.scripts_of_body += "<script>\n" + code + "</script>\n"
         else:
@@ -35,7 +34,8 @@ class Html:
             self.add_scriptlink(url, body)
 
     def get_document(self):
-        return "<!Doctype>\n<html>\n<head>\n" + self.head + "\n" + self.scripts_of_head + "\n</head>\n<body>\n" \
+        return "<!Doctype>\n<html>\n<head>\n" + self.head + "\n" + self.scripts_of_head \
+               + "\n</head>\n<body>\n" \
                + self.body + "\n" + self.scripts_of_body + "\n</body>\n</html>"
 
     def get_html_file(self, path="index.html"):

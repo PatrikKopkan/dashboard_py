@@ -13,6 +13,7 @@ class GitEntry:
     def __str__(self):
         return "commit: " + self.commit + "author: " + self.author
 
+
 class Gitlog:
 
     def __init__(self):
@@ -35,4 +36,3 @@ class Gitlog:
                 email = email[0]
             if datem:
                 self.git_entries.append(GitEntry(commit, author, email, datem[0]))
-
