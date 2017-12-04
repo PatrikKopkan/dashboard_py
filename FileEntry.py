@@ -2,15 +2,15 @@ import re
 
 
 class File:
-    def __init__(self, repo, name, length):
-        self.repo = repo
+    def __init__(self, name, length):
         self.name = name
         self.length = length
 
     def __str__(self):
-        # return "Repository: " + self.repo + " " + "Name: " + self.name + " Length: " + \
-        #        str(self.length)
         return "Name: " + self.name + " Length: " + str(self.length)
+
+    def dict(self):
+        return {'name': self.name, 'length': self.length}
 
 
 class Repo:
@@ -65,6 +65,30 @@ class Repo:
                     self.pictures += 1
 
 
+
+
+class Repoes:
+    Repoes = []
+
+    def __init__(self):
+        pass
+
+    def parseFromLs(self, array):
+
+    temp = []
+    repo = ""
+    for s in array:
+        match = re.findall(r'\.\/([a-zA-Z_\-0-9]+)', s)
+        if match:
+            repo = match[0]
+            print(repo + "\n")
+        temp = s.split()
+        if len(temp) == 9:
+            print(temp[8] + " " + temp[4] + "\n")
+            #self.append(File(temp[8], temp[4]))
+
+
+# spatne udelane
 class FileEntry:
     def __init__(self):
         self.Files = []

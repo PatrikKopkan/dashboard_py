@@ -22,6 +22,7 @@ def index():
 
 @app.route('/admininstration')
 def administration():
+
     return render_template('administration.html')
 
 

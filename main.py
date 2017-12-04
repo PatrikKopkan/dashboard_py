@@ -63,14 +63,14 @@ path2 = "/home/dellboy/Documents/dashboard/links.txt"
 # git_clone(path2)
 mypath = "/home/$USER/Documents/repoes"
 
-#var = basic_statistic(mypath.replace("$USER", get_user()))
-# output = ""
-# for item in var:
-#     output += item + "\n"
-# print(output)
+var = basic_statistic(mypath.replace("$USER", get_user()))
+output = ""
+for item in var:
+    output += item + "\n"
+print(output)
+
 #files = FileEntry.FileEntry()
 #files.parse_from_ls(var)
-#files.count()
 #doc = Html.Html()
 #doc.add_csslink(CSS_LINK)
 #doc.add_scriptlink(JS_LINK)
