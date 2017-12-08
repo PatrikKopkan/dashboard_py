@@ -1,0 +1,11 @@
+{% extends 'layout.html'%}
+
+	{% block body %}
+	<form action="{{ url_for('login') }}" method="POST">
+		username: <br/>
+		<input name="username" type="text" value="{{request.form.username}}"/> <br/>
+		password: <br/>
+		<input name="password" type="password" value="{{request.form.password}}"/> <br/>
+		<button>submit</button>
+	</form>
+	{% endblock %}
