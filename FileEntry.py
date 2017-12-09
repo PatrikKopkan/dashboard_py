@@ -64,6 +64,9 @@ class Repo:
                 if match[0] == "jpeg":
                     self.pictures += 1
 
+    def dict(self):
+        pass
+
 
 
 
@@ -96,51 +99,55 @@ class Repoes:
             output += f.__str__() + "\n"
         return output
 
-
-# spatne udelane
-class FileEntry:
-    def __init__(self):
-        self.Files = []
-        self.adoc = 0
-        self.xml = 0
-        self.pictures = 0
-
-    def append(self, repo):
-        self.Files.append(repo)
-
-    def parse_from_ls(self, array):
-        temp = []
-        repo = ""
-        i = 0
-        for s in array:
-            match = re.findall(r'\.\/([a-zA-Z_\-0-9]+)', s)
-            if match:
-                if repo == "":
-                    repo = match[0]
-                    self.append(Repo(repo))
-                elif repo != match[0]:
-                    repo = match[0]
-                    self.append(Repo(repo))
-                    i += 1
-            temp = s.split()
-            # print(temp)
-            # print(len(temp) == 9, 9 & len(self.Files) != 0)
-            # print(len(temp) == 9 & len(self.Files) != 0)
-            # print(False & True)
-            if len(temp) == 9 and len(self.Files) != 0:
-                # print(self.Files[i])
-                # print(temp[8])
-                self.Files[i].append(File(temp[8], temp[4]))
-
-    def __str__(self):
-        output = ""
-        for f in self.Files:
-            output += f.__str__() + "\n"
-        return output
-
     def count(self):
-        for f in self.Files:
-            f.count()
-            self.adoc += f.adoc
-            self.xml += f.xml
-            self.pictures += f.pictures
+        for repo in self.Repoes:
+            repo.count()
+
+
+# # spatne udelane
+# class FileEntry:
+#     def __init__(self):
+#         self.Files = []
+#         self.adoc = 0
+#         self.xml = 0
+#         self.pictures = 0
+#
+#     def append(self, repo):
+#         self.Files.append(repo)
+#
+#     def parse_from_ls(self, array):
+#         temp = []
+#         repo = ""
+#         i = 0
+#         for s in array:
+#             match = re.findall(r'\.\/([a-zA-Z_\-0-9]+)', s)
+#             if match:
+#                 if repo == "":
+#                     repo = match[0]
+#                     self.append(Repo(repo))
+#                 elif repo != match[0]:
+#                     repo = match[0]
+#                     self.append(Repo(repo))
+#                     i += 1
+#             temp = s.split()
+#             # print(temp)
+#             # print(len(temp) == 9, 9 & len(self.Files) != 0)
+#             # print(len(temp) == 9 & len(self.Files) != 0)
+#             # print(False & True)
+#             if len(temp) == 9 and len(self.Files) != 0:
+#                 # print(self.Files[i])
+#                 # print(temp[8])
+#                 self.Files[i].append(File(temp[8], temp[4]))
+#
+#     def __str__(self):
+#         output = ""
+#         for f in self.Files:
+#             output += f.__str__() + "\n"
+#         return output
+#
+#     def count(self):
+#         for f in self.Files:
+#             f.count()
+#             self.adoc += f.adoc
+#             self.xml += f.xml
+#             self.pictures += f.pictures
