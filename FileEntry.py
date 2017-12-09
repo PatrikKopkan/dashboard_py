@@ -39,7 +39,7 @@ class Repo:
     def __str__(self):
         output = ""
         for f in self.Files:
-            output += "Repository: " + self.name + " " + f.__str__() + "\n"
+            output += "Repository: " + self.name + " "+ f.__str__() + "\n"
         return output
 
     def count(self):
