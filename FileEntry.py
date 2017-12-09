@@ -37,9 +37,9 @@ class Repo:
         pass
 
     def __str__(self):
-        output = "Repository: " + self.name + "\n"
+        output = ""
         for f in self.Files:
-            output += f.__str__() + "\n"
+            output += "Repository: " + self.name + " " + f.__str__() + "\n"
         return output
 
     def count(self):
@@ -73,19 +73,28 @@ class Repoes:
     def __init__(self):
         pass
 
-    def parseFromLs(self, array):
+    def append(self, repo):
+        self.Repoes.append(repo)
 
-    temp = []
-    repo = ""
-    for s in array:
-        match = re.findall(r'\.\/([a-zA-Z_\-0-9]+)', s)
-        if match:
-            repo = match[0]
-            print(repo + "\n")
-        temp = s.split()
-        if len(temp) == 9:
-            print(temp[8] + " " + temp[4] + "\n")
-            #self.append(File(temp[8], temp[4]))
+    def parseFromLs(self, array):
+        temp = []
+        repo = ""
+        for s in array:
+            match = re.findall(r'^\.\/([a-zA-Z_\-0-9]+)', s)
+            if match:
+                repo = match[0]
+                self.append(Repo(repo))
+                #print(repo + "\n")
+            temp = s.split()
+            if len(temp) == 9 and len(self.Repoes) > 0:
+                #print(temp[8] + " " + temp[4] + "\n")
+                self.Repoes[-1].append(File(temp[8], temp[4]))
+
+    def __str__(self):
+        output = ""
+        for f in self.Repoes:
+            output += f.__str__() + "\n"
+        return output
 
 
 # spatne udelane
@@ -121,7 +130,7 @@ class FileEntry:
             if len(temp) == 9 and len(self.Files) != 0:
                 # print(self.Files[i])
                 # print(temp[8])
-                self.Files[i].append(File(repo, temp[8], temp[4]))
+                self.Files[i].append(File(temp[8], temp[4]))
 
     def __str__(self):
         output = ""
