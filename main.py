@@ -59,19 +59,19 @@ def basic_statistic2(path):
     print(output)
 
 
-path2 = "/home/dellboy/Documents/dashboard/links.txt"
-# git_clone(path2)
-mypath = "/home/$USER/Documents/repoes"
-
-var = basic_statistic(mypath.replace("$USER", get_user()))
-#output = ""
-#for item in var:
-#    output += item + "\n"
-#print(output)
-
-repa = FileEntry.Repoes()
-repa.parseFromLs(var)
-print(repa)
+# path2 = "/home/dellboy/Documents/dashboard/links.txt"
+# # git_clone(path2)
+# mypath = "/home/$USER/Documents/repoes"
+#
+# var = basic_statistic(mypath.replace("$USER", get_user()))
+# #output = ""
+# #for item in var:
+# #    output += item + "\n"
+# #print(output)
+#
+# repa = FileEntry.Repoes()
+# repa.parseFromLs(var)
+# print(repa)
 #files = FileEntry.FileEntry()
 #files.parse_from_ls(var)
 #doc = Html.Html()

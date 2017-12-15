@@ -12,6 +12,9 @@ class File:
     def dict(self):
         return {'name': self.name, 'length': self.length}
 
+    def toList(self):
+        return []
+
 
 class Repo:
     def __init__(self, name):

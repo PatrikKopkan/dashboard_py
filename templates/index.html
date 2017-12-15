@@ -1,6 +1,24 @@
 {% extends "layout.html" %}
 {% block body %}
 <table class='table table-condensed table-hover table-bordered sortable'>
+{% if files: %}
+    <thead>
+        <th>repository</th>
+        <th>adoc</th>
+        <th>xml</th>
+        <th>pictures</th>
+    </thead>
 
+    {% for item in files.repoes %}
+    <tr>
+        <td><li><a href="{{item.name}}">{{item.name}}</a></li><td>
+        <td>{{item.adoc}}<td>
+        <td>{{item.xml}}</td>
+        <td>{{item.pictures}}</td>
+    </tr>
+    {% endfor %}
+
+
+{% endif %}
 </table>
 {% endblock %}

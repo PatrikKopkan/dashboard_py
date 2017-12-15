@@ -1,6 +1,6 @@
-from flask import Flask, render_template,redirect, url_for
+from flask import Flask, render_template, redirect, url_for, request
 import main
-
+import FileEntry
 app = Flask(__name__)
 
 
@@ -8,16 +8,16 @@ app = Flask(__name__)
 def index():
     path2 = "/home/dellboy/Documents/dashboard/links.txt"
     # git_clone(path2)
-    mypath = "/home/$USER/Documents/repoes"
+    mypath = "/home/$USER/Documents"
 
     var = main.basic_statistic(mypath.replace("$USER", main.get_user()))
     # output = ""
     # for item in var:
     #     output += item + "\n"
     # print(output)
-    files = main.FileEntry.FileEntry()
-    files.parse_from_ls(var)
-    return render_template('index.html')
+    files = FileEntry.Repoes()
+    files.parseFromLs(var)
+    return render_template('index.html', files=files)
 
 
 @app.route('/login', methods=['GET', 'POST'])
