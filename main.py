@@ -34,12 +34,12 @@ def get_user():
 
 
 def basic_statistic(path):
-    commands = "cd " + path + "; ls -R -l> mytemp.txt"
+    commands = "cd " + path + "/; ls -R -l> mytemp.txt;"
     os.system(commands)
     file = open(path + "/mytemp.txt", "r")
     output = file.readlines()
     file.close()
-    os.system("cd " + path + "; rm mytemp.txt")
+    os.system("cd " + path + "; rm mytemp.txt;")
     return output
 
 
@@ -61,17 +61,19 @@ def basic_statistic2(path):
 
 # path2 = "/home/dellboy/Documents/dashboard/links.txt"
 # # git_clone(path2)
-# mypath = "/home/$USER/Documents/repoes"
+mypath = "/home/$USER/Documents/repoes"
 #
-# var = basic_statistic(mypath.replace("$USER", get_user()))
+var = basic_statistic(mypath.replace("$USER", get_user()))
 # #output = ""
 # #for item in var:
 # #    output += item + "\n"
 # #print(output)
 #
-# repa = FileEntry.Repoes()
-# repa.parseFromLs(var)
-# print(repa)
+repa = FileEntry.Repoes()
+repa.parseFromLs(var)
+for r in repa.Repoes:
+    print(r.name)
+    print('\n')
 #files = FileEntry.FileEntry()
 #files.parse_from_ls(var)
 #doc = Html.Html()

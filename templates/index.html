@@ -8,8 +8,9 @@
         <th>xml</th>
         <th>pictures</th>
     </thead>
+    {{files.Repoes}}
+    {% for item in files.Repoes %}
 
-    {% for item in files.repoes %}
     <tr>
         <td><li><a href="{{item.name}}">{{item.name}}</a></li><td>
         <td>{{item.adoc}}<td>

@@ -8,15 +8,18 @@ app = Flask(__name__)
 def index():
     path2 = "/home/dellboy/Documents/dashboard/links.txt"
     # git_clone(path2)
-    mypath = "/home/$USER/Documents"
+    mypath = "/home/$USER/Documents/repoes"
 
     var = main.basic_statistic(mypath.replace("$USER", main.get_user()))
     # output = ""
     # for item in var:
     #     output += item + "\n"
     # print(output)
+
     files = FileEntry.Repoes()
     files.parseFromLs(var)
+    files.count()
+    print(files)
     return render_template('index.html', files=files)
 
 
