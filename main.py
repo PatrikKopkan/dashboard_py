@@ -1,5 +1,8 @@
 import os
 import re
+
+from os.path import isdir
+
 import FileEntry
 import subprocess
 import Html
@@ -57,9 +60,13 @@ def basic_statistic2(path):
     file.close()
     os.system("cd " + path + "; rm mytemp.txt")
     print(output)
+def listingdirectories(path):
+    repositaries = []
+    for x in os.listdir(path):
+        if isdir(x):
+            
 
-
-# path2 = "/home/dellboy/Documents/dashboard/links.txt"
+    # path2 = "/home/dellboy/Documents/dashboard/links.txt"
 # # git_clone(path2)
 mypath = "/home/$USER/Documents/repoes"
 #

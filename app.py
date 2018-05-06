@@ -36,6 +36,8 @@ def administration():
 
     return render_template('administration.html')
 
+@app.route('/repository')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
