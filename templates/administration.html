@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
 {%block head%}
-    {{username}}<br/>
-    {{password}}
+    {{session['username']}}<br/>
+    {{session['password']}}
 {%endblock%}
 
 
