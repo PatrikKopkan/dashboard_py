@@ -1,4 +1,4 @@
-import re
+import os
 
 
 class File:
@@ -17,8 +17,9 @@ class File:
 
 
 class Repo:
-    def __init__(self, name):
+    def __init__(self, name, path):
         self.name = name
+        self.path = path
         self.Files = []
         self.adoc = 0
         self.xml = 0
@@ -27,74 +28,43 @@ class Repo:
     def append(self, file):
         self.Files.append(file)
 
-    def parse_from_ls(self, array):
-        # temp = []
-        # repo = ""
-        # for s in array:
-        #     match = re.findall(r'\.\/([a-zA-Z_\-0-9]+)', s)
-        #     if match:
-        #         repo = match[0]
-        #     temp = s.split()
-        #     if len(temp) == 9:
-        #         self.append(File(repo, temp[8], temp[4]))
-        pass
+    # def __str__(self):
+    #     output = ""
+    #     for f in self.Files:
+    #         output += "Repository: " + self.name + " " + f.__str__() + "\n"
+    #     return output
 
     def __str__(self):
-        output = ""
-        for f in self.Files:
-            output += "Repository: " + self.name + " "+ f.__str__() + "\n"
-        return output
+        return "name: {} adoc: {} pictures: {} xml: {}".format(self.name, self.adoc, self.pictures, self.xml)
 
     def count(self):
-        for f in self.Files:
-            match = re.findall(r'\.[a-z]+$', f.name)
-            if match:
-                if match[0] == ".adoc":
+        for root, dirs, files in os.walk(self.path):
+            for filename in files:
+                extension = os.path.splitext(filename)[1][1:].strip()
+                if extension == "adoc":
                     self.adoc += 1
 
-                if match[0] == ".xml":
+                elif extension == "xml":
                     self.xml += 1
 
-            #  if match[0] == ".png" | match[0] == ".jpg" | match[0] == ".jpeg":
-            #     self.pictures += 1
-
-                if match[0] == ".png":
+                elif extension == "png":
                     self.pictures += 1
 
-                if match[0] == ".jpg":
+                elif extension == "jpg":
                     self.pictures += 1
 
-                if match[0] == "jpeg":
+                elif extension == "jpeg":
                     self.pictures += 1
-
-    def dict(self):
-        pass
-
-
 
 
 class Repoes:
     Repoes = []
 
-    def __init__(self):
-        pass
+    def __init__(self, path):
+        self.path = path
 
     def append(self, repo):
         self.Repoes.append(repo)
-
-    def parseFromLs(self, array):
-        temp = []
-        repo = ""
-        for s in array:
-            match = re.findall(r'^\.\/([a-zA-Z_\-0-9]+)', s)
-            if match:
-                repo = match[0]
-                self.append(Repo(repo))
-                #print(repo + "\n")
-            temp = s.split()
-            if len(temp) == 9 and len(self.Repoes) > 0:
-                #print(temp[8] + " " + temp[4] + "\n")
-                self.Repoes[-1].append(File(temp[8], temp[4]))
 
     def __str__(self):
         output = ""
@@ -103,54 +73,11 @@ class Repoes:
         return output
 
     def count(self):
-        for repo in self.Repoes:
-            repo.count()
+        for repo in os.listdir(self.path):
+            r = Repo(repo, os.path.join(self.path, repo))
+            r.count()
+            self.append(r)
 
-
-# # spatne udelane
-# class FileEntry:
-#     def __init__(self):
-#         self.Files = []
-#         self.adoc = 0
-#         self.xml = 0
-#         self.pictures = 0
-#
-#     def append(self, repo):
-#         self.Files.append(repo)
-#
-#     def parse_from_ls(self, array):
-#         temp = []
-#         repo = ""
-#         i = 0
-#         for s in array:
-#             match = re.findall(r'\.\/([a-zA-Z_\-0-9]+)', s)
-#             if match:
-#                 if repo == "":
-#                     repo = match[0]
-#                     self.append(Repo(repo))
-#                 elif repo != match[0]:
-#                     repo = match[0]
-#                     self.append(Repo(repo))
-#                     i += 1
-#             temp = s.split()
-#             # print(temp)
-#             # print(len(temp) == 9, 9 & len(self.Files) != 0)
-#             # print(len(temp) == 9 & len(self.Files) != 0)
-#             # print(False & True)
-#             if len(temp) == 9 and len(self.Files) != 0:
-#                 # print(self.Files[i])
-#                 # print(temp[8])
-#                 self.Files[i].append(File(temp[8], temp[4]))
-#
-#     def __str__(self):
-#         output = ""
-#         for f in self.Files:
-#             output += f.__str__() + "\n"
-#         return output
-#
-#     def count(self):
-#         for f in self.Files:
-#             f.count()
-#             self.adoc += f.adoc
-#             self.xml += f.xml
-#             self.pictures += f.pictures
+repoes = Repoes('data/repositories/')
+repoes.count()
+print(repoes)
