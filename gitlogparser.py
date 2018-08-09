@@ -5,15 +5,18 @@ import sqlite3
 
 class GitEntry:
 
-    def __init__(self, commit, author, email, date, message):
+    def __init__(self, commit, author, email, date, message, insertions, deletions):
         self.commit = commit
         self.author = author
         self.email = email
         self.date = date
         self.message = message
+        self.insertions = insertions
+        self.deletions = deletions
 
     def __str__(self):
-        return "commit: " + self.commit + "author: " + self.author
+        return "commint: {}, author {}, insertions: {}, del: {}".format(self.commit, self.author, self.insertions,
+                                                                        self.deletions)
 
 
 class GitLog:
@@ -33,6 +36,8 @@ class GitLog:
         email = ""
         date = ""
         message = ""
+        insertions = 0
+        deletions = 0
         # text = r"commit\s(\w+)"
         # print(re.match(text, r'commit eee467b7111b9db7900c49a48b90355fc33fdc84 '
         #                       r'(HEAD -> master, origin/master, origin/HEAD)\n')[0])
@@ -44,32 +49,32 @@ class GitLog:
 
             if re.match(r"commit (\w+)", line):
                 if commit != "":
-                    self.git_entries.append(GitEntry(commit, author, email, date, message))
+                    self.git_entries.append(GitEntry(commit, author, email, date, message, insertions, deletions))
                     commit = ""
                     author = ""
                     email = ""
                     date = ""
                     message = ""
                 commit = re.search(r"commit\s(\w+)", line)[1]
-                # print(commit)
 
             elif re.search(r"Author: (\w+ \w+)", line):
                 author = re.search(r"Author: (\w+ \w+)", line)[1]
-                # print(author)
 
             elif re.search(r"<\w+@\w+\.\w+>", line):
                 email = re.search(r"<(\w+@\w+\.\w+)>", line)[1]
-                # print(email)
 
-            elif bool(re.search(r"Date:\s+(.+)", line)):
+            elif re.search(r"Date:\s+(.+)", line):
                 date = re.search(r"Date:\s+(.+)", line)[1]
-                # print(date)
 
-            elif bool(re.search(r"    (.+)", line)):
+            elif re.search(r"    (.+)", line):
                 message += re.search(r"    (.+)", line)[1]
-                # print(message)
 
-        self.git_entries.append(GitEntry(commit, author, email, date, message))
+            if re.search(r'(\d+) insertions', line):
+                insertions = int(re.search(r'(\d+) insertions\(\+\)', line)[1])
+            if re.search(r'(\d+) deletions', line):
+                deletions = int(re.search(r'(\d+) deletions', line)[1])
+
+        self.git_entries.append(GitEntry(commit, author, email, date, message, insertions, deletions))
 
 
 # test = open("gitlog_example", "r")
@@ -80,9 +85,9 @@ repo = git.Repo('./data/repositories/flask-website')
 assert repo, 'error'
 
 gitlog = GitLog()
-list = repo.git.log().split('\n')
+list = repo.git.log(stat=True).split('\n')
 gitlog.parse_from_gitlog(list)
-# print(gitlog)
+print(gitlog)
 # gitlog = Gitlog()
 #
 # gitlog.parse_from_gitlog(test)
