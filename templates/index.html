@@ -1,19 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
 <table class='table table-condensed table-hover table-bordered sortable'>
-{% if files: %}
+    {% if _Repositories: %}
     <thead>
         <th>repository</th>
         <th>adoc</th>
         <th>xml</th>
         <th>pictures</th>
     </thead>
-    {{files.Repoes}}
-    {% for item in files.Repoes %}
+    {% for item in _Repositories.Repoes %}
 
     <tr>
-        <td><li><a href="{{item.name}}">{{item.name}}</a></li><td>
-        <td>{{item.adoc}}<td>
+        <td><a href="{{url_for('repository', repository=item.name)}}">{{item.name}}</a></td>
+        <td>{{item.adoc}}</td>
         <td>{{item.xml}}</td>
         <td>{{item.pictures}}</td>
     </tr>

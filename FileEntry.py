@@ -77,7 +77,7 @@ class Repoes:
             r = Repo(repo, os.path.join(self.path, repo))
             r.count()
             self.append(r)
-
-repoes = Repoes('data/repositories/')
-repoes.count()
-print(repoes)
+# global repositories
+# repositories = Repoes('data/repositories/')
+# repositories.count()
+# print(repoes)

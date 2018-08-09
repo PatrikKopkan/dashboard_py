@@ -7,7 +7,6 @@ import FileEntry
 import subprocess
 import Html
 
-
 JS_LINK = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"
 CSS_LINK = "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"
 
@@ -60,33 +59,41 @@ def basic_statistic2(path):
     file.close()
     os.system("cd " + path + "; rm mytemp.txt")
     print(output)
+
+
 def listingdirectories(path):
     repositaries = []
     for x in os.listdir(path):
         if isdir(x):
-            
+            pass
 
     # path2 = "/home/dellboy/Documents/dashboard/links.txt"
+
 # # git_clone(path2)
-#mypath = "/home/$USER/Documents/repoes"
+# mypath = "/home/$USER/Documents/repoes"
 #
-#var = basic_statistic(mypath.replace("$USER", get_user()))
+# var = basic_statistic(mypath.replace("$USER", get_user()))
 # #output = ""
 # #for item in var:
 # #    output += item + "\n"
 # #print(output)
 #
-#repa = FileEntry.Repoes()
-#repa.parseFromLs(var)
-#for r in repa.Repoes:
+# repa = FileEntry.Repoes()
+# repa.parseFromLs(var)
+# for r in repa.Repoes:
 #    print(r.name)
 #    print('\n')
-#files = FileEntry.FileEntry()
-#files.parse_from_ls(var)
-#doc = Html.Html()
-#doc.add_csslink(CSS_LINK)
-#doc.add_scriptlink(JS_LINK)
-#doc.sorted_table(files)
-#print(doc.get_document())
-#doc.get_html_file("/home/dellboy/Documents/index.html")
+# files = FileEntry.FileEntry()
+# files.parse_from_ls(var)
+# doc = Html.Html()
+# doc.add_csslink(CSS_LINK)
+# doc.add_scriptlink(JS_LINK)
+# doc.sorted_table(files)
+# print(doc.get_document())
+# doc.get_html_file("/home/dellboy/Documents/index.html")
 # print(files.xml)
+
+
+# for root, dirs, files in os.walk(os.path.join(repoes, target)):
+#     for filename in files:
+#         print(os.path.splitext(filename)[1])

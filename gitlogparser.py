@@ -88,6 +88,7 @@ gitlog = GitLog()
 list = repo.git.log(stat=True).split('\n')
 gitlog.parse_from_gitlog(list)
 print(gitlog)
+
 # gitlog = Gitlog()
 #
 # gitlog.parse_from_gitlog(test)

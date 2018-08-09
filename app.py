@@ -1,35 +1,28 @@
-from os import rename
+
 
 from flask import Flask, render_template, redirect, url_for, request, flash
-#import main
+import FileEntry
 import FileEntry
 from forms import LoginForm
 from config import Config
 from flask import session
 import sqlite3
+from werkzeug import secure_filename
+import git
+import gitlogparser
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-#@app.route('/')
-#def index():
-    # path2 = "/home/dellboy/Documents/dashboard/links.txt"
-    # # git_clone(path2)
-    # mypath = "/home/$USER/Documents/repoes"
-    #
-    # var = main.basic_statistic(mypath.replace("$USER", main.get_user()))
-    # # output = ""
-    # # for item in var:
-    # #     output += item + "\n"
-    # # print(output)
-    #
-    # files = FileEntry.Repoes()
-    # files.parseFromLs(var)
-    # files.count()
-    # print(files)
-    #return render_template('index.html', files=files)
+global _Repositories
+_Repositories = FileEntry.Repoes('data/repositories/')
+_Repositories.count()
 
 
+@app.route('/')
+def index():
+    print(_Repositories)
+    return render_template('index.html', _Repositories=_Repositories)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -43,19 +36,33 @@ def login():
         return redirect('/administration')
     return render_template('login.html', title='Sign In', form=form)
 
+
 @app.route('/administration')
 def administration():
-
     return render_template('administration.html')
+
+
+@app.route('/add_repoes', methods=['GET', 'POST'])
+def add_repoes():
+    if request.method == 'POST':
+        last_url = ''
+        try:
+            f = request.files['file']
+            for url in f:
+                url.strip()
+                git.Repo("~/data/repositories").clone(url)
+                last_url = url
+        except:
+            flash('Check file you have uploaded. Urls must be separated by enter. Last used url: {}'.format(last_url))
+            return
+        return 'file uploaded successfully'
 
 
 @app.route('/repository/<repository>')
 def repository(repository):
-    pass
-print(app.config['SECRET_KEY'])
+    return ''
 
+print(app.config['SECRET_KEY'])
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
