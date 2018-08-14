@@ -1,7 +1,9 @@
 import re
 import git
 import sqlite3
-
+import datetime as datetime
+import numpy as np
+import matplotlib.pyplot as plt
 
 class GitEntry:
 
@@ -15,8 +17,8 @@ class GitEntry:
         self.deletions = deletions
 
     def __str__(self):
-        return "commint: {}, author {}, insertions: {}, del: {}".format(self.commit, self.author, self.insertions,
-                                                                        self.deletions)
+        return "commit: {}, author {}, insertions: {}, del: {}".format(self.commit, self.author, self.insertions,
+                                                                       self.deletions)
 
 
 class GitLog:
@@ -63,8 +65,23 @@ class GitLog:
             elif re.search(r"<\w+@\w+\.\w+>", line):
                 email = re.search(r"<(\w+@\w+\.\w+)>", line)[1]
 
-            elif re.search(r"Date:\s+(.+)", line):
-                date = re.search(r"Date:\s+(.+)", line)[1]
+            elif re.search(r"Date:\s+(.+) (?:(.)(?:\d(\d)\d\d))", line):
+                search = re.search(r"Date:\s+(.+) (?:(.)(?:\d(\d)\d\d))", line)
+                date = search[1]
+                sign = search[2]
+                zone = search[3]
+                print('date: {} sign:{} zone: {}'.format(date, sign, zone))
+                date = datetime.datetime.strptime(date, '%c')
+                zone = datetime.timedelta(hours=int(zone))
+                if sign == '-':
+                    date = date - zone
+                else:
+                    date = date + zone
+
+                # timed = datetime.timedelta(
+                #     hours=
+                # )
+                print(date)
 
             elif re.search(r"    (.+)", line):
                 message += re.search(r"    (.+)", line)[1]
@@ -77,6 +94,37 @@ class GitLog:
         self.git_entries.append(GitEntry(commit, author, email, date, message, insertions, deletions))
 
 
+class DataEntry:
+    def __init__(self, date, insertions, deletions):
+        self.date = date
+        self.insertions = insertions
+        self.deletions = deletions
+
+    def __str__(self):
+        return 'date: {}'
+
+    def __repr__(self):
+        return 'self.date: {} self.insertions: {} self.deletions'.format(self.date, self.insertions, self.deletions)
+
+
+class DataForChart:
+    def __init__(self):
+        self.authors = {}
+
+    def parse(self, gitlog_instance):
+        for entry in gitlog_instance.git_entries:
+            data = DataEntry(entry.date, entry.insertions, entry.deletions)
+            if not entry.author in self.authors:
+                self.authors[entry.author] = [data]
+                print(self.authors[entry.author])
+            self.authors[entry.author].append(data)
+
+    def __str__(self):
+        return self.authors.__str__()
+
+
+# date = datetime.strptime('Wed May 2 07:31:44 2018 -0700', '')
+# print(date)
 # test = open("gitlog_example", "r")
 # test = test.readlines()
 # import git
@@ -88,6 +136,11 @@ gitlog = GitLog()
 list = repo.git.log(stat=True).split('\n')
 gitlog.parse_from_gitlog(list)
 print(gitlog)
+chart1 = DataForChart()
+chart1.parse(gitlog)
+print(chart1)
+
+
 
 # gitlog = Gitlog()
 #
