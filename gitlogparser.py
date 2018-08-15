@@ -4,6 +4,10 @@ import sqlite3
 import datetime as datetime
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.dates import date2num
+from matplotlib.ticker import Formatter
+
+0
 
 class GitEntry:
 
@@ -13,8 +17,8 @@ class GitEntry:
         self.email = email
         self.date = date
         self.message = message
-        self.insertions = insertions
-        self.deletions = deletions
+        self.insertions = 0 if insertions is None else insertions
+        self.deletions = 0 if deletions is None else deletions
 
     def __str__(self):
         return "commit: {}, author {}, insertions: {}, del: {}".format(self.commit, self.author, self.insertions,
@@ -70,7 +74,6 @@ class GitLog:
                 date = search[1]
                 sign = search[2]
                 zone = search[3]
-                print('date: {} sign:{} zone: {}'.format(date, sign, zone))
                 date = datetime.datetime.strptime(date, '%c')
                 zone = datetime.timedelta(hours=int(zone))
                 if sign == '-':
@@ -81,7 +84,6 @@ class GitLog:
                 # timed = datetime.timedelta(
                 #     hours=
                 # )
-                print(date)
 
             elif re.search(r"    (.+)", line):
                 message += re.search(r"    (.+)", line)[1]
@@ -101,13 +103,13 @@ class DataEntry:
         self.deletions = deletions
 
     def __str__(self):
-        return 'date: {}'
+        return 'date: {} insertions: {} deletions: {}'.format(self.date, self.insertions, self.deletions)
 
     def __repr__(self):
-        return 'self.date: {} self.insertions: {} self.deletions'.format(self.date, self.insertions, self.deletions)
+        return 'self.date: {} self.insertions: {} self.deletions: {}'.format(self.date, self.insertions, self.deletions)
 
 
-class DataForChart:
+class DataForCharts:
     def __init__(self):
         self.authors = {}
 
@@ -116,8 +118,8 @@ class DataForChart:
             data = DataEntry(entry.date, entry.insertions, entry.deletions)
             if not entry.author in self.authors:
                 self.authors[entry.author] = [data]
-                print(self.authors[entry.author])
-            self.authors[entry.author].append(data)
+            else:
+                self.authors[entry.author].append(data)
 
     def __str__(self):
         return self.authors.__str__()
@@ -128,17 +130,62 @@ class DataForChart:
 # test = open("gitlog_example", "r")
 # test = test.readlines()
 # import git
-repo = git.Repo('./data/repositories/flask-website')
+repo = git.Repo('./')
 
 assert repo, 'error'
 
 gitlog = GitLog()
 list = repo.git.log(stat=True).split('\n')
 gitlog.parse_from_gitlog(list)
-print(gitlog)
-chart1 = DataForChart()
-chart1.parse(gitlog)
-print(chart1)
+charts = DataForCharts()
+charts.parse(gitlog)
+
+
+class MyFormatter(Formatter):
+    def __init__(self, dates, fmt='%Y-%m-%d'):
+        self.dates = dates
+        self.fmt = fmt
+
+    def __call__(self, x, pos=0):
+        'Return the label for time x at position pos'
+        ind = int(np.round(x))
+        if ind >= len(self.dates) or ind < 0:
+            return ''
+
+        return self.dates[ind]
+
+
+x = []
+y = []
+for author, data in charts.authors.items():
+    print(author)
+    print(data)
+    for d in data:
+        # print((d.date))
+        # x.append(date2num(d.date))
+        x.append(d.date)
+        # print(d.insertions - d.deletions)
+        y.append(d.insertions - d.deletions)
+    print('x: {} y: {}'.format(len(x), len(y)))
+
+    # plt.plot_date(x, y, 'o-', label='Lines')
+    #
+    # plt.xlabel('Date')
+    # plt.ylabel('lines')
+    # plt.title(author)
+    # plt.legend()
+    # plt.show()
+    # x = []
+    # y = []
+
+    formatter = MyFormatter(x)
+
+    fig, ax = plt.subplots()
+    ax.xaxis.set_major_formatter(formatter)
+    ax.plot(np.arange(len(x)), y, 'o-')
+    fig.autofmt_xdate()
+    plt.title(author)
+    plt.show()
 
 
 

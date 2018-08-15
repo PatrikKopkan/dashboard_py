@@ -21,7 +21,7 @@ _Repositories.count()
 
 @app.route('/')
 def index():
-    print(_Repositories)
+    # print(_Repositories)
     return render_template('index.html', _Repositories=_Repositories)
 
 
