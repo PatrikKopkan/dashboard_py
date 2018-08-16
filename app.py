@@ -10,12 +10,17 @@ import sqlite3
 from werkzeug import secure_filename
 import git
 import gitlogparser
+import os, re
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
+global _Path_To_Repoes
+_Path_To_Repoes = './data/repositories/'
 global _Repositories
-_Repositories = FileEntry.Repoes('data/repositories/')
+global _Temp
+_Temp = './static/temp/'
+_Repositories = FileEntry.Repoes(_Path_To_Repoes)
 _Repositories.count()
 
 
@@ -46,21 +51,32 @@ def administration():
 def add_repoes():
     if request.method == 'POST':
         last_url = ''
-        try:
-            f = request.files['file']
-            for url in f:
-                url.strip()
-                git.Repo("~/data/repositories").clone(url)
-                last_url = url
-        except:
-            flash('Check file you have uploaded. Urls must be separated by enter. Last used url: {}'.format(last_url))
-            return
-        return 'file uploaded successfully'
+        # f = request.files['file']
+        # for url in f:
+        #     print(url)
+        f = request.files['file']
+        for url in f:
+            str = url.decode('utf-8')
+            # print(str)
+            str = str.strip()
+            # print(str)
+            repeated = False
+            for dir in os.listdir(_Path_To_Repoes):
+                dir_from_url = str.split('/' or '//')[-1].replace('.git', '')
+                if dir == dir_from_url:
+                    flash('this repository: {} already has been cloned'.format(dir))
+                    repeated = True
+            if not repeated:
+                git.Git("./data/repositories").clone(str)
+            # last_url = url
+
+        return redirect('administration')
 
 
 @app.route('/repository/<repository>')
 def repository(repository):
-    return ''
+    list_of_graphs = gitlogparser.make_graphs(_Path_To_Repoes, repository, _Temp)
+    return render_template('repository.html', list_of_graphs=list_of_graphs)
 
 print(app.config['SECRET_KEY'])
 

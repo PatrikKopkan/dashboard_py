@@ -1,0 +1,7 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    {% for img in list_of_graphs %}
+        <img src="{{ url_for('static', filename=img) }}" alt="graph"/>
+    {% endfor %}
+{% endblock %}

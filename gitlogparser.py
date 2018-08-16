@@ -8,6 +8,7 @@ from matplotlib.dates import date2num
 from matplotlib.ticker import Formatter
 import os.path
 
+
 temp = './data/temp'
 
 class GitEntry:
@@ -126,22 +127,6 @@ class DataForCharts:
         return self.authors.__str__()
 
 
-# date = datetime.strptime('Wed May 2 07:31:44 2018 -0700', '')
-# print(date)
-# test = open("gitlog_example", "r")
-# test = test.readlines()
-# import git
-repo = git.Repo('./')
-
-assert repo, 'error'
-
-gitlog = GitLog()
-list = repo.git.log(stat=True).split('\n')
-gitlog.parse_from_gitlog(list)
-charts = DataForCharts()
-charts.parse(gitlog)
-
-
 class MyFormatter(Formatter):
     def __init__(self, dates, fmt='%Y-%m-%d'):
         self.dates = dates
@@ -156,45 +141,70 @@ class MyFormatter(Formatter):
         return self.dates[ind]
 
 
-x = []
-y = []
-for author, data in charts.authors.items():
-    author = 'Unknown' if author is None or author == '' else author
-    print(author)
-    print(data)
-    for d in data:
-        # print((d.date))
-        # x.append(date2num(d.date))
-        x.append(d.date)
-        # print(d.insertions - d.deletions)
-        y.append(d.insertions - d.deletions)
-    print('x: {} y: {}'.format(len(x), len(y)))
+# date = datetime.strptime('Wed May 2 07:31:44 2018 -0700', '')
+# print(date)
+# test = open("gitlog_example", "r")
+# test = test.readlines()
+# import git
 
-    # fig = plt.plot_date(x, y, 'o-', label='Lines')
-    #
-    # plt.xlabel('Date')
-    # plt.ylabel('lines')
-    # plt.title(author)
-    # plt.legend()
-    # # plt.show()
-    #
-    # plt.savefig(os.path.join(temp, author))
-    # x = []
-    # y = []
+path_to_repoes = './data/repositories/'
+repo = 'flask-website'
 
-    formatter = MyFormatter(x)
 
-    fig, ax = plt.subplots()
-    ax.xaxis.set_major_formatter(formatter)
-    ax.plot(np.arange(len(x)), y, 'o-')
-    fig.autofmt_xdate()
-    ax.set_title(author)
-    # fig.show()
-    fig.savefig(os.path.join(temp, author))
+def make_graphs(path_to_repoes, repo, temp):
+    repo = git.Repo(os.path.join(path_to_repoes, repo))
+
+    assert repo, 'error'
+
+    gitlog = GitLog()
+    list = repo.git.log(stat=True).split('\n')
+    gitlog.parse_from_gitlog(list)
+    charts = DataForCharts()
+    charts.parse(gitlog)
+
     x = []
     y = []
+    list_of_graphs = []
+    for author, data in charts.authors.items():
+        author = 'Unknown' if author is None or author == '' else author
+        print(author)
+        print(data)
+        for d in data:
+            # print((d.date))
+            # x.append(date2num(d.date))
+            x.append(d.date)
+            # print(d.insertions - d.deletions)
+            y.append(d.insertions - d.deletions)
+        print('x: {} y: {}'.format(len(x), len(y)))
 
+        # fig = plt.plot_date(x, y, 'o-', label='Lines')
+        #
+        # plt.xlabel('Date')
+        # plt.ylabel('lines')
+        # plt.title(author)
+        # plt.legend()
+        # # plt.show()
+        #
+        # plt.savefig(os.path.join(temp, author))
+        # x = []
+        # y = []
 
+        formatter = MyFormatter(x)
+
+        fig, ax = plt.subplots()
+        ax.xaxis.set_major_formatter(formatter)
+        ax.plot(np.arange(len(x)), y, 'o-')
+        fig.autofmt_xdate()
+        ax.set_title(author)
+        # fig.show()
+        fig.savefig(os.path.join(temp, author))
+        list_of_graphs.append('temp/' + author + '.png')
+        x = []
+        y = []
+
+    return list_of_graphs
+
+# make_graphs(path_to_repoes, repo, temp)
 
 
 # gitlog = Gitlog()
