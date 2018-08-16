@@ -6,8 +6,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.dates import date2num
 from matplotlib.ticker import Formatter
+import os.path
 
-0
+temp = './data/temp'
 
 class GitEntry:
 
@@ -158,6 +159,7 @@ class MyFormatter(Formatter):
 x = []
 y = []
 for author, data in charts.authors.items():
+    author = 'Unknown' if author is None or author == '' else author
     print(author)
     print(data)
     for d in data:
@@ -168,13 +170,15 @@ for author, data in charts.authors.items():
         y.append(d.insertions - d.deletions)
     print('x: {} y: {}'.format(len(x), len(y)))
 
-    # plt.plot_date(x, y, 'o-', label='Lines')
+    # fig = plt.plot_date(x, y, 'o-', label='Lines')
     #
     # plt.xlabel('Date')
     # plt.ylabel('lines')
     # plt.title(author)
     # plt.legend()
-    # plt.show()
+    # # plt.show()
+    #
+    # plt.savefig(os.path.join(temp, author))
     # x = []
     # y = []
 
@@ -184,8 +188,12 @@ for author, data in charts.authors.items():
     ax.xaxis.set_major_formatter(formatter)
     ax.plot(np.arange(len(x)), y, 'o-')
     fig.autofmt_xdate()
-    plt.title(author)
-    plt.show()
+    ax.set_title(author)
+    # fig.show()
+    fig.savefig(os.path.join(temp, author))
+    x = []
+    y = []
+
 
 
 
