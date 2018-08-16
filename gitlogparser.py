@@ -4,6 +4,7 @@ import sqlite3
 import datetime as datetime
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import dates
 from matplotlib.dates import date2num
 from matplotlib.ticker import Formatter
 import os.path
@@ -172,6 +173,7 @@ def make_graphs(path_to_repoes, repo, temp):
         for d in data:
             # print((d.date))
             # x.append(date2num(d.date))
+            type(d.date)
             x.append(d.date)
             # print(d.insertions - d.deletions)
             y.append(d.insertions - d.deletions)
@@ -189,11 +191,12 @@ def make_graphs(path_to_repoes, repo, temp):
         # x = []
         # y = []
 
-        formatter = MyFormatter(x)
+        # formatter = MyFormatter(x)
+        hfmt = dates.DateFormatter('%Y-%m-%d')
 
         fig, ax = plt.subplots()
-        ax.xaxis.set_major_formatter(formatter)
-        ax.plot(np.arange(len(x)), y, 'o-')
+        ax.xaxis.set_major_formatter(hfmt)
+        ax.plot(x, y, 'o-')
         fig.autofmt_xdate()
         ax.set_title(author)
         # fig.show()
