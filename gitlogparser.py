@@ -152,6 +152,17 @@ path_to_repoes = './data/repositories/'
 repo = 'flask-website'
 
 
+def setup_ticks(step):
+    """Configure ticks so only each n-th tick will be visible."""
+
+    locs, plt_labels = plt.xticks()
+    plt.setp(plt_labels, rotation=90)
+    for tick in plt_labels:
+        tick.set_visible(False)
+
+    for tick in plt_labels[::step]:
+        tick.set_visible(True)
+
 def make_graphs(path_to_repoes, repo, temp):
     repo = git.Repo(os.path.join(path_to_repoes, repo))
 
@@ -173,38 +184,46 @@ def make_graphs(path_to_repoes, repo, temp):
         for d in data:
             # print((d.date))
             # x.append(date2num(d.date))
-            type(d.date)
+            # type(d.date)
             x.append(d.date)
             # print(d.insertions - d.deletions)
             y.append(d.insertions - d.deletions)
         print('x: {} y: {}'.format(len(x), len(y)))
 
-        # fig = plt.plot_date(x, y, 'o-', label='Lines')
-        #
-        # plt.xlabel('Date')
-        # plt.ylabel('lines')
-        # plt.title(author)
-        # plt.legend()
-        # # plt.show()
-        #
-        # plt.savefig(os.path.join(temp, author))
-        # x = []
-        # y = []
-
         # formatter = MyFormatter(x)
         hfmt = dates.DateFormatter('%Y-%m-%d')
 
-        fig, ax = plt.subplots()
-        ax.xaxis.set_major_formatter(hfmt)
-        ax.plot(x, y, 'o-')
-        fig.autofmt_xdate()
-        ax.set_title(author)
-        # fig.show()
-        fig.savefig(os.path.join(temp, author))
+        # fig, ax = plt.subplots()
+        # # ax.xaxis.set_major_formatter(hfmt)
+        # ax.plot(x, y, 'o-')
+        # fig.autofmt_xdate()
+        # ax.set_title(author)
+        # plt.show()
+        # # fig.savefig(os.path.join(temp, author))
+        # list_of_graphs.append('temp/' + author + '.png')
+        # x = []
+        # y = []
+
+        # plt.rcdefaults()
+        items = len(x)
+        fig = plt.bar(np.arange(items), y)
+        plt.xticks(np.arange(items), x)
+        step = 1
+        if items > 20:
+            step = 2
+            if items > 40:
+                step = 3
+        setup_ticks(step)
+        # ax.xaxis.set_major_formatter(hfmt)
+        # ax.plot(x, y, 'o-')
+        # fig.autofmt_xdate()
+        # ax.set_title(author)
+        plt.show()
+        # plt.savefig(os.path.join(temp, author))
         list_of_graphs.append('temp/' + author + '.png')
         x = []
         y = []
-
+        # plt.close(fig)
     return list_of_graphs
 
 # make_graphs(path_to_repoes, repo, temp)

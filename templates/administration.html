@@ -9,4 +9,12 @@
     <input type="file" name="file"/>
     <input type="submit" value="Upload"/>
 </form>
+    <table>
+        {% for item in _Repositories.Repoes %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td><a href="{{ url_for('delete_repo', repository=item.name) }}">delete</a></td>
+            </tr>
+        {% endfor %}
+    </table>
 {%endblock%}

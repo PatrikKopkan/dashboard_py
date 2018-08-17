@@ -1,7 +1,5 @@
-
-
 from flask import Flask, render_template, redirect, url_for, request, flash
-import FileEntry
+from flask_sqlalchemy import SQLAlchemy
 import FileEntry
 from forms import LoginForm
 from config import Config
@@ -44,13 +42,13 @@ def login():
 
 @app.route('/administration')
 def administration():
-    return render_template('administration.html')
+    return render_template('administration.html', _Repositories=_Repositories)
 
 
 @app.route('/add_repoes', methods=['GET', 'POST'])
 def add_repoes():
     if request.method == 'POST':
-        last_url = ''
+        added_repoes = []
         # f = request.files['file']
         # for url in f:
         #     print(url)
@@ -68,15 +66,30 @@ def add_repoes():
                     repeated = True
             if not repeated:
                 git.Git("./data/repositories").clone(str)
+                added_repoes.append(str)
             # last_url = url
-
+        _Repositories.count(added_repoes)
         return redirect('administration')
+
+
+@app.route('/delete_repo/<repository>')
+def delete_repo(repository):
+    path_to_del_repo = os.path.join(_Repositories.path, repository)
+    print(path_to_del_repo)
+    for root, dirs, files in os.walk(path_to_del_repo, topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+
+    _Repositories.delete(repository)
 
 
 @app.route('/repository/<repository>')
 def repository(repository):
     list_of_graphs = gitlogparser.make_graphs(_Path_To_Repoes, repository, _Temp)
     return render_template('repository.html', list_of_graphs=list_of_graphs)
+
 
 print(app.config['SECRET_KEY'])
 

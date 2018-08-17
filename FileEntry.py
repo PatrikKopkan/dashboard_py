@@ -58,13 +58,17 @@ class Repo:
 
 
 class Repoes:
-    Repoes = []
 
     def __init__(self, path):
         self.path = path
+        self.Repoes = []
 
     def append(self, repo):
         self.Repoes.append(repo)
+
+    def delete(self, del_repo):
+        self.Repoes = [repo for repo in self.Repoes if repo.name != del_repo]
+
 
     def __str__(self):
         output = ""
@@ -72,11 +76,18 @@ class Repoes:
             output += f.__str__() + "\n"
         return output
 
-    def count(self):
-        for repo in os.listdir(self.path):
-            r = Repo(repo, os.path.join(self.path, repo))
-            r.count()
-            self.append(r)
+    def count(self, added_repoes=[]):
+        if len(added_repoes) == 0:
+            self.Repoes = []
+            for repo in os.listdir(self.path):
+                r = Repo(repo, os.path.join(self.path, repo))
+                r.count()
+                self.append(r)
+        else:
+            for added_repo in added_repoes:  # deal with errors
+                r = Repo(repo, os.path.join(self.path, repo))
+                r.count()
+                self.append(r)
 # global repositories
 # repositories = Repoes('data/repositories/')
 # repositories.count()
