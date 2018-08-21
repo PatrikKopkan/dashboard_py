@@ -1,7 +1,7 @@
 import re
 import git
 import sqlite3
-import datetime as datetime
+import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import dates
@@ -47,15 +47,9 @@ class GitLog:
         message = ""
         insertions = 0
         deletions = 0
-        # text = r"commit\s(\w+)"
-        # print(re.match(text, r'commit eee467b7111b9db7900c49a48b90355fc33fdc84 '
-        #                       r'(HEAD -> master, origin/master, origin/HEAD)\n')[0])
         for line in array:
-            # print(line)
-
-            # if line == "" or line == "\n":
-            #     continue
-
+            print(line)
+        for line in array:
             if re.match(r"commit (\w+)", line):
                 if commit != "":
                     self.git_entries.append(GitEntry(commit, author, email, date, message, insertions, deletions))
@@ -68,9 +62,14 @@ class GitLog:
 
             elif re.search(r"Author: (\w+ \w+)", line):
                 author = re.search(r"Author: (\w+ \w+)", line)[1]
+                if re.search(r"<\w+@\w+\.\w+>", line):
+                    email = re.search(r"<(\w+@\w+\.\w+)>", line)[1]
 
-            elif re.search(r"<\w+@\w+\.\w+>", line):
-                email = re.search(r"<(\w+@\w+\.\w+)>", line)[1]
+            elif re.search(r"Author: (\w+)", line):
+                author = re.search(r"Author: (\w+)", line)[1]
+                if re.search(r"<\w+@\w+\.\w+>", line):
+                    email = re.search(r"<(\w+@\w+\.\w+)>", line)[1]
+
 
             elif re.search(r"Date:\s+(.+) (?:(.)(?:\d(\d)\d\d))", line):
                 search = re.search(r"Date:\s+(.+) (?:(.)(?:\d(\d)\d\d))", line)
@@ -80,9 +79,9 @@ class GitLog:
                 date = datetime.datetime.strptime(date, '%c')
                 zone = datetime.timedelta(hours=int(zone))
                 if sign == '-':
-                    date = date - zone
-                else:
                     date = date + zone
+                else:
+                    date = date - zone
 
                 # timed = datetime.timedelta(
                 #     hours=
@@ -91,10 +90,12 @@ class GitLog:
             elif re.search(r"    (.+)", line):
                 message += re.search(r"    (.+)", line)[1]
 
-            if re.search(r'(\d+) insertions', line):
-                insertions = int(re.search(r'(\d+) insertions\(\+\)', line)[1])
-            if re.search(r'(\d+) deletions', line):
-                deletions = int(re.search(r'(\d+) deletions', line)[1])
+            elif re.search(r'(\d+) insertion(?:s)*', line):
+                insertions = int(re.search(r'(\d+) insertion(?:s)*\(\+\)', line)[1])
+                print(line)
+                print(insertions)
+                if re.search(r'(\d+) deletion(?:s)*', line):
+                    deletions = int(re.search(r'(\d+) deletion(?:s)*', line)[1])
 
         self.git_entries.append(GitEntry(commit, author, email, date, message, insertions, deletions))
 
@@ -225,6 +226,17 @@ def make_graphs(path_to_repoes, repo, temp):
         y = []
         # plt.close(fig)
     return list_of_graphs
+
+# path_to_repoes = './unittests/repositories'
+# repo = git.Repo(os.path.join(path_to_repoes, 'test1'))
+# gitlog = GitLog()
+# list = repo.git.log(stat=True).split('\n')
+# gitlog.parse_from_gitlog(list)
+# entries = gitlog.git_entries
+# print(entries[0].email)
+
+
+
 
 # make_graphs(path_to_repoes, repo, temp)
 

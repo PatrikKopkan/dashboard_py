@@ -58,7 +58,6 @@ class Repo:
 
 
 class Repoes:
-
     def __init__(self, path):
         self.path = path
         self.Repoes = []
@@ -84,7 +83,7 @@ class Repoes:
                 r.count()
                 self.append(r)
         else:
-            for added_repo in added_repoes:  # deal with errors
+            for added_repo in added_repoes:  # deal with error
                 r = Repo(repo, os.path.join(self.path, repo))
                 r.count()
                 self.append(r)
