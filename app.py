@@ -71,17 +71,20 @@ def login():
 
 @app.route('/administration')
 def administration():  # todo: hash password
-    page = None
+    page = ''
     try:
         query = User.query.filter_by(username=session['username'], password=session['password']).first()
         if query is not None:
+            print('in if')
             page = render_template('administration.html', _Repositories=_Repositories)
+        else:
+            page = redirect(url_for('login'))
+            flash('wrong password or username')
     except KeyError:
         flash('not logged in')
         page = redirect(url_for('login'))
     finally:
         return page
-
 
 @app.route('/add_repoes', methods=['GET', 'POST'])
 def add_repoes():
