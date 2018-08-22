@@ -9,9 +9,24 @@ from werkzeug import secure_filename
 import git
 import gitlogparser
 import os, re
+from flask import g
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+db = SQLAlchemy(app)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password = db.Column(db.String(100), unique=False, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=True)
+
+    def __repr__(self):
+        return '<User {}, password: {}>'.format(self.username, self.password)
+
+
 
 global _Path_To_Repoes
 _Path_To_Repoes = './data/repositories/'
@@ -21,6 +36,20 @@ _Temp = './static/temp/'
 _Repositories = FileEntry.Repoes(_Path_To_Repoes)
 _Repositories.count()
 
+
+#
+# def get_db():
+#     if 'db' not in g:
+#         g.db = SQLAlchemy(app)
+#
+#     return g.db
+#
+# @app.teardown_appcontext
+# def teardown_db():
+#     db = g.pop('db', None)
+#
+#     if db is not None:
+#         db.close()
 
 @app.route('/')
 def index():
@@ -41,8 +70,17 @@ def login():
 
 
 @app.route('/administration')
-def administration():
-    return render_template('administration.html', _Repositories=_Repositories)
+def administration():  # todo: hash password
+    page = None
+    try:
+        query = User.query.filter_by(username=session['username'], password=session['password']).first()
+        if query is not None:
+            page = render_template('administration.html', _Repositories=_Repositories)
+    except KeyError:
+        flash('not logged in')
+        page = redirect(url_for('login'))
+    finally:
+        return page
 
 
 @app.route('/add_repoes', methods=['GET', 'POST'])
@@ -91,7 +129,6 @@ def repository(repository):
     return render_template('repository.html', list_of_graphs=list_of_graphs)
 
 
-print(app.config['SECRET_KEY'])
 
 if __name__ == '__main__':
     app.run(debug=True)
