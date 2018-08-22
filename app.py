@@ -5,17 +5,17 @@ from forms import LoginForm
 from config import Config
 from flask import session
 import sqlite3
-from werkzeug import secure_filename
+# from werkzeug import secure_filename
 import git
 import gitlogparser
 import os, re
-from flask import g
+
+# from flask import g
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
 db = SQLAlchemy(app)
-
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -32,7 +32,8 @@ global _Path_To_Repoes
 _Path_To_Repoes = './data/repositories/'
 global _Repositories
 global _Temp
-_Temp = './static/temp/'
+# _Temp = './static/temp/'
+_Temp = './temp/'
 _Repositories = FileEntry.Repoes(_Path_To_Repoes)
 _Repositories.count()
 
@@ -75,7 +76,6 @@ def administration():  # todo: hash password
     try:
         query = User.query.filter_by(username=session['username'], password=session['password']).first()
         if query is not None:
-            print('in if')
             page = render_template('administration.html', _Repositories=_Repositories)
         else:
             page = redirect(url_for('login'))

@@ -2,6 +2,6 @@
 
 {% block body %}
     {% for img in list_of_graphs %}
-        <img src="{{ url_for('static', filename=img) }}" alt="graph"/>
+        <img src="{{ img }}" alt="graph"/>
     {% endfor %}
 {% endblock %}

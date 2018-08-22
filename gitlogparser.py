@@ -8,6 +8,7 @@ from matplotlib import dates
 from matplotlib.dates import date2num
 from matplotlib.ticker import Formatter
 import os.path
+from flask import url_for
 
 
 temp = './data/temp'
@@ -143,16 +144,6 @@ class MyFormatter(Formatter):
         return self.dates[ind]
 
 
-# date = datetime.strptime('Wed May 2 07:31:44 2018 -0700', '')
-# print(date)
-# test = open("gitlog_example", "r")
-# test = test.readlines()
-# import git
-
-path_to_repoes = './data/repositories/'
-repo = 'flask-website'
-
-
 def setup_ticks(step):
     """Configure ticks so only each n-th tick will be visible."""
 
@@ -165,6 +156,13 @@ def setup_ticks(step):
         tick.set_visible(True)
 
 def make_graphs(path_to_repoes, repo, temp):
+    """
+
+    :param path_to_repoes:
+    :param repo: name of repository
+    :param temp: directory where graphs will be saved
+    :return: list of paths to graphs(for <img src="">
+    """
     repo = git.Repo(os.path.join(path_to_repoes, repo))
 
     assert repo, 'error'
@@ -191,8 +189,7 @@ def make_graphs(path_to_repoes, repo, temp):
             y.append(d.insertions - d.deletions)
         print('x: {} y: {}'.format(len(x), len(y)))
 
-        # formatter = MyFormatter(x)
-        hfmt = dates.DateFormatter('%Y-%m-%d')
+        # hfmt = dates.DateFormatter('%Y-%m-%d')
 
         # fig, ax = plt.subplots()
         # # ax.xaxis.set_major_formatter(hfmt)
@@ -205,23 +202,30 @@ def make_graphs(path_to_repoes, repo, temp):
         # x = []
         # y = []
 
-        # plt.rcdefaults()
         items = len(x)
+        plt.figure()
         fig = plt.bar(np.arange(items), y)
         plt.xticks(np.arange(items), x)
+        plt.title(author)
         step = 1
         if items > 20:
             step = 2
             if items > 40:
                 step = 3
+                if items > 80:
+                    step = 5
+                    if items > 200:
+                        step = 50
         setup_ticks(step)
         # ax.xaxis.set_major_formatter(hfmt)
         # ax.plot(x, y, 'o-')
         # fig.autofmt_xdate()
         # ax.set_title(author)
-        plt.show()
-        # plt.savefig(os.path.join(temp, author))
-        list_of_graphs.append('temp/' + author + '.png')
+        # plt.show()
+        path_to_img = os.path.join(url_for('static', filename=temp), author)
+        print(path_to_img)
+        plt.savefig('.' + path_to_img)
+        list_of_graphs.append(path_to_img + '.png')
         x = []
         y = []
         # plt.close(fig)
