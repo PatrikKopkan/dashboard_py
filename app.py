@@ -26,8 +26,6 @@ class User(db.Model):
     def __repr__(self):
         return '<User {}, password: {}>'.format(self.username, self.password)
 
-
-
 global _Path_To_Repoes
 _Path_To_Repoes = './data/repositories/'
 global _Repositories
