@@ -102,6 +102,8 @@ class GitLog:
 
 
 class DataEntry:
+    """
+    """
     def __init__(self, date, insertions, deletions):
         self.date = date
         self.insertions = insertions
@@ -114,11 +116,25 @@ class DataEntry:
         return 'self.date: {} self.insertions: {} self.deletions: {}'.format(self.date, self.insertions, self.deletions)
 
 
-class DataForCharts:
+class DataForLinesGraphs:
+    """
+    prepares data for graph showing how much author was contributing with lines of code to repo
+    """
     def __init__(self):
         self.authors = {}
 
     def parse(self, gitlog_instance):
+        """
+        takes GitLog instance and fill self.authors with dict looking like this:
+        {
+        author1:[[number of inserted lines],[number of deleted lines],
+        author2:[[number of inserted lines],[number of deleted lines]
+        ...
+        }
+
+        :param gitlog_instance: parsed gitlog with GitLog instance
+        :return:
+        """
         for entry in gitlog_instance.git_entries:
             data = DataEntry(entry.date, entry.insertions, entry.deletions)
             if not entry.author in self.authors:
@@ -157,11 +173,10 @@ def setup_ticks(step):
 
 def make_graphs(path_to_repoes, repo, temp):
     """
-
     :param path_to_repoes:
     :param repo: name of repository
     :param temp: directory where graphs will be saved
-    :return: list of paths to graphs(for <img src="">
+    :return: list of paths to graphs for <img src="">
     """
     repo = git.Repo(os.path.join(path_to_repoes, repo))
 
@@ -170,7 +185,7 @@ def make_graphs(path_to_repoes, repo, temp):
     gitlog = GitLog()
     list = repo.git.log(stat=True).split('\n')
     gitlog.parse_from_gitlog(list)
-    charts = DataForCharts()
+    charts = DataForLinesGraphs()
     charts.parse(gitlog)
 
     x = []
@@ -239,7 +254,16 @@ def make_graphs(path_to_repoes, repo, temp):
 # entries = gitlog.git_entries
 # print(entries[0].email)
 
-
+# def commit_graphs(path_to_repoes, repo, temp):
+#     repo = git.Repo(os.path.join(path_to_repoes, repo))
+#
+#     assert repo, 'error'
+#
+#     gitlog = GitLog()
+#     list = repo.git.log(stat=True).split('\n')
+#     gitlog.parse_from_gitlog(list)
+#     charts = DataForLinesGraphs()
+#     charts.parse(gitlog)
 
 
 # make_graphs(path_to_repoes, repo, temp)

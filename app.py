@@ -88,15 +88,10 @@ def administration():  # todo: hash password
 def add_repoes():
     if request.method == 'POST':
         added_repoes = []
-        # f = request.files['file']
-        # for url in f:
-        #     print(url)
         f = request.files['file']
         for url in f:
             str = url.decode('utf-8')
-            # print(str)
             str = str.strip()
-            # print(str)
             repeated = False
             for dir in os.listdir(_Path_To_Repoes):
                 dir_from_url = str.split('/' or '//')[-1].replace('.git', '')
