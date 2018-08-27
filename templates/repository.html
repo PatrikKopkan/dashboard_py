@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
-
 {% block body %}
+    <h2>Charts showing activity and contribution of lines to repositories</h2>
     {% for img in list_of_graphs %}
         <img src="{{ img }}" alt="graph"/>
     {% endfor %}

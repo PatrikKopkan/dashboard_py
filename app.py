@@ -60,8 +60,8 @@ def index():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        flash('Login requested for user {}, remember_me={}'.format(
-            form.username.data, form.remember_me.data))
+        # flash('Login requested for user {}, remember_me={}'.format(
+        #     form.username.data, form.remember_me.data))
         session['username'] = form.username.data
         session['password'] = form.password.data
         return redirect('/administration')
@@ -101,7 +101,6 @@ def add_repoes():
             if not repeated:
                 git.Git("./data/repositories").clone(str)
                 added_repoes.append(str)
-            # last_url = url
         _Repositories.count(added_repoes)
         return redirect('administration')
 

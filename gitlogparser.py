@@ -132,7 +132,7 @@ class DataForLinesGraphs:
         ...
         }
 
-        :param gitlog_instance: parsed gitlog with GitLog instance
+        :param gitlog_instance: parsed git log with GitLog instance
         :return:
         """
         for entry in gitlog_instance.git_entries:
@@ -199,29 +199,20 @@ def make_graphs(path_to_repoes, repo, temp):
             # print((d.date))
             # x.append(date2num(d.date))
             # type(d.date)
-            x.append(d.date)
+            x.append(d.date.date())
             # print(d.insertions - d.deletions)
             y.append(d.insertions - d.deletions)
         print('x: {} y: {}'.format(len(x), len(y)))
 
-        # hfmt = dates.DateFormatter('%Y-%m-%d')
-
-        # fig, ax = plt.subplots()
-        # # ax.xaxis.set_major_formatter(hfmt)
-        # ax.plot(x, y, 'o-')
-        # fig.autofmt_xdate()
-        # ax.set_title(author)
-        # plt.show()
-        # # fig.savefig(os.path.join(temp, author))
-        # list_of_graphs.append('temp/' + author + '.png')
-        # x = []
-        # y = []
 
         items = len(x)
         plt.figure()
-        fig = plt.bar(np.arange(items), y)
+        plt.bar(np.arange(items), y)
         plt.xticks(np.arange(items), x)
         plt.title(author)
+        plt.xlabel('date')
+        plt.ylabel('added lines')
+        plt.subplots_adjust(left=0.19, bottom=0.25, right=0.94, top=0.90, wspace=0.2, hspace=0)
         step = 1
         if items > 20:
             step = 2
@@ -246,40 +237,9 @@ def make_graphs(path_to_repoes, repo, temp):
         # plt.close(fig)
     return list_of_graphs
 
-# path_to_repoes = './unittests/repositories'
-# repo = git.Repo(os.path.join(path_to_repoes, 'test1'))
-# gitlog = GitLog()
+# path_to_repoes = './data/repositories'
+# repo = git.Repo(os.path.join(path_to_repoes, 'flask-website'))
 # list = repo.git.log(stat=True).split('\n')
-# gitlog.parse_from_gitlog(list)
-# entries = gitlog.git_entries
-# print(entries[0].email)
-
-# def commit_graphs(path_to_repoes, repo, temp):
-#     repo = git.Repo(os.path.join(path_to_repoes, repo))
-#
-#     assert repo, 'error'
-#
-#     gitlog = GitLog()
-#     list = repo.git.log(stat=True).split('\n')
-#     gitlog.parse_from_gitlog(list)
-#     charts = DataForLinesGraphs()
-#     charts.parse(gitlog)
-
-
-# make_graphs(path_to_repoes, repo, temp)
-
-
-# gitlog = Gitlog()
-#
-# gitlog.parse_from_gitlog(test)
-# print(gitlog.git_entries[0])
-#
-# db = sqlite3.connect('data/mydb')
-# cursor = db.cursor()
-
-# cursor.execute('''SELECT name, email, phone FROM users''')
-# all_rows = cursor.fetchall()
-#  for row in all_rows:
-#      print('{0} : {1}, {2}'.format(row[0], row[1], row[2]))
-#
-#  db.close()
+# for line in list:
+#     print(line)
+# gitlog = GitLog()
